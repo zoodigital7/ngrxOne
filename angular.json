@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "june14Class"
+    }
+  },
+  "defaultProject": "june14Class",
+  "cli": {
+    "analytics": false
+  }
 }
