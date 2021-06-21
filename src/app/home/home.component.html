@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 text-center mt-5 mb-5">
+      <h1 class="text-success">Welcome to the application <span *ngIf="currentUser">, {{currentUser.firstName}}</span></h1>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          Functionality we are going to build out
+        </div>
+        <div class="card-body">
+          This is a description of the functionality we build out
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <button class="btn btn-warning btn-block" (click)="openNgIfModal()">
+              Open NgIf Modal
+            </button>
+          </li>
+          <li class="list-group-item">
+            <button class="btn btn-warning btn-block" [routerLink]="['/auth/login']">
+              Route to 'auth/login' === src/app/auth/login-email.component.ts
+            </button>
+          </li>
+          <li class="list-group-item">
+            <button class="btn btn-danger btn-block" (click)="logoutUser()">
+              Logout
+            </button>
+          </li>
+        </ul>
+        <div class="card-footer">
+          This is some stuff in the footer
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-modals [id]="ngIfModalId" size="large">
+  <app-login-email class="w-100" (userLoggedIn)="setUserLoggedIn($event)"></app-login-email>
+</app-modals>
