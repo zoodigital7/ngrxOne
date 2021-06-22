@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, ofType, Effect } from '@ngrx/effects';
 import { switchMap, catchError, map, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-
+import { of } from 'rxjs'
 import * as AuthActions from './auth.actions';
 import { User } from '../../shared/models/user';
 import { UserService } from '../../shared/services/user.service';
@@ -68,26 +65,17 @@ export class AuthEffects {
   authLogin = this.actions$.pipe(
     ofType(AuthActions.LOGIN_START),
     switchMap((authData: AuthActions.LoginStart) => {
-      return this.http
-        .post<AuthResponseData>(
-          'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=' +
-            environment.firebaseAPIKey,
-          {
-            email: authData.payload.email,
-            password: authData.payload.password,
-            returnSecureToken: true
-          }
-        )
+      return of(ExistingUsers.find(x =>x.email === authData.payload.email && x.password === authData.payload.password))
         .pipe(
-          tap(resData => {
-            this.authService.setLogoutTimer(+resData.expiresIn * 1000);
-          }),
           map(resData => {
             return handleAuthentication(
-              +resData.expiresIn,
+              resData.id,
+              resData.firstName,
+              resData.lastName,
               resData.email,
-              resData.localId,
-              resData.idToken
+              resData.password,
+              resData.accessToken,
+              ExistingUsers.find(x =>x.email === authData.payload.email && x.password === authData.payload.password)
             );
           }),
           catchError(errorRes => {
@@ -97,9 +85,6 @@ export class AuthEffects {
     })
   );
   constructor(
-    private actions$: Actions,
-    private http: HttpClient,
-    private router: Router,
-    private authService: AuthService
+    private actions$: Actions
   ) {}
 }
