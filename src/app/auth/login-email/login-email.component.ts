@@ -39,22 +39,15 @@ export class LoginEmailComponent implements OnInit {
   }
 
   submitForm(email: string, pass: string) {
-    const foundUser = this.existingUsers.find(x => x.email === email && x.password === pass)
-    debugger
-    if (foundUser) {
-      this.subs.add(
-        this.userService.loginUser(foundUser).subscribe(user => {
-          if (user) {
-            this.userLoggedIn.emit(true)
-            this.router.navigate(['home'])
-          }
-        })
-      )
-    } else {
-      this.hasError = true
-      this.errorMsg = 'User not found!!'
-    }
-
+    const params = { email: email, password: pass}
+    this.subs.add(
+      this.userService.loginUser(params).subscribe(user => {
+        if (user) {
+          this.userLoggedIn.emit(true)
+          this.router.navigate(['home'])
+        }
+      })
+    )
   }
 
   ngOnDestroy() {

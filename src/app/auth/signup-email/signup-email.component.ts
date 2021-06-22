@@ -51,12 +51,24 @@ export class SignupEmailComponent implements OnInit, OnDestroy {
   }
 
   signupUser() {
-    const params = {}
+    if (this.form && this.form.invalid) {
+      this.submitting = false
+      this.hasError = true
+      return
+    }
+    const form = this.form.value
+    const params = {
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      password: form.password
+    }
     this.subs.add(
       this.userService.registerUser(params).subscribe(data => {
         debugger
-        if (data) {
-          const newUser = new User(data)
+        if (data.success && data.user) {
+          const newUser = data.user
+          this.router.navigate(['/home'])
         }
       })
     )
